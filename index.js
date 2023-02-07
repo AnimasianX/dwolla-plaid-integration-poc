@@ -53,7 +53,7 @@ const plaidClient = new PlaidApi(plaidConfig);
 //Routes
 
 //when user signs up
-app.post("/create-business-customer", async(req,res)=>{
+app.post("/api/dwolla/create-business-customer", async(req,res)=>{
     let requestBody = {
         firstName: "Jane",
         lastName: "Merchant",
@@ -79,7 +79,7 @@ app.post("/create-business-customer", async(req,res)=>{
 })
 
 //When user signs up
-app.post("/create-unverified-funding-source", async (req,res)=>{// can only receive funds not send.
+app.post("/api/dwolla/create-unverified-funding-source", async (req,res)=>{// can only receive funds not send.
     let customerUrl = "https://api-sandbox.dwolla.com/customers/b3016d7d-2c5e-4141-b0ff-e0bcbadcb31d";
 
     let requestBody={
@@ -94,7 +94,7 @@ app.post("/create-unverified-funding-source", async (req,res)=>{// can only rece
 }) 
 
 //when user signs up
-app.get("/create-buyer", async (req,res)=>{
+app.get("/api/dwolla/create-customer", async (req,res)=>{
     let requestBody={
         firstName: "Joe",
         lastName: "Buyer",
@@ -109,17 +109,40 @@ app.get("/create-buyer", async (req,res)=>{
 
 
 //after user signs up and wants to add bank account info to their account
-app.post("/create-verified-funding-source", (req,res)=>{
-    let customerUrl = 
-        "https://api-sandbox.dwolla.com/customers/37606f4a-723a-4d37-ad62-2829958b4103";
-    let requestBody={
-        plaidToken:"public-sandbox-f294a054-5c95-4be8-bf39-f82a09f2dc59",
-        name: "Joe Buyers Checking",
+//Verifies bank with dwolla and adds it as a verified funding source in dwolla so that current user can
+//send AND receive money.
+app.post("/api/dwolla-plaid-verified-funding-source", async(req,res)=>{
+    try{
+        const accessToken = req.session.access_token;
+
+        const request = {
+            access_token: accessToken,
+            account_id: req.body.accountID,
+            processor: 'dwolla',
+        };
+
+        const processorTokenResponse = await plaidClient.processorTokenCreate(
+            request,
+        );
+        const processorToken = processorTokenResponse.data.processor_token;
+        console.log("Processor token:");
+        console.log(processorToken);
+
+        var customerUrl = "https://api-sandbox.dwolla.com/customers/37606f4a-723a-4d37-ad62-2829958b4103";
+        var requestBody = {
+            plaidToken: processorToken,
+            name: "Joe Buyer’s Checking",
+        };
+
+    dwolla
+        .post(`${customerUrl}/funding-sources`, requestBody)
+        .then((res) => res.headers.get("location"));
+    }catch(error){
+        console.log(error);
     }
 
-    dwolla.post(`${customerUrl}/funding-sources`, requestBody)
-    .then((res)=> res.headers.get("location"));
-})
+    res.json(true);
+});
 
 
 
@@ -177,42 +200,9 @@ app.get("/api/is_account_connected", async (req, res, next) => {
 });
 
 
-//Verifies bank with dwolla and adds it as a verified funding source in dwolla so that current user can
-//send AND receive money.
-app.post("/api/connect_dwolla_with_plaid", async(req,res)=>{
-    try{
-        const accessToken = req.session.access_token;
 
-        const request = {
-            access_token: accessToken,
-            account_id: req.body.accountID,
-            processor: 'dwolla',
-        };
 
-        const processorTokenResponse = await plaidClient.processorTokenCreate(
-            request,
-        );
-        const processorToken = processorTokenResponse.data.processor_token;
-        console.log("Processor token:");
-        console.log(processorToken);
-
-        var customerUrl = "https://api-sandbox.dwolla.com/customers/37606f4a-723a-4d37-ad62-2829958b4103";
-        var requestBody = {
-            plaidToken: processorToken,
-            name: "Joe Buyer’s Checking",
-        };
-
-    dwolla
-        .post(`${customerUrl}/funding-sources`, requestBody)
-        .then((res) => res.headers.get("location"));
-    }catch(error){
-        console.log(error);
-    }
-
-    res.json(true);
-});
-
-app.post("/api/transfer-funds", (req,res)=>{
+app.post("/api/dwolla/transfer-funds", (req,res)=>{
     var requestBody = {
         _links: {
           source: {
