@@ -1,5 +1,15 @@
 # dwolla-plaid-integration-poc
 
+## Useful Links
+- https://accounts-sandbox.dwolla.com/
+- https://developers.dwolla.com/guides/transfer-money-between-users
+- https://developers.dwolla.com/guides/plaid
+- https://www.dwolla.com/pricing/
+- https://plaid.com/docs/auth/partnerships/dwolla/
+- https://plaid.com/docs/api/tokens/#itempublic_tokenexchange
+- https://dashboard.plaid.com/team/sandbox
+
+
 Bare Minimum implementation of POC for Per Diem app.
 
 ## To get started:
