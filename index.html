@@ -29,7 +29,7 @@
               },
             });
 
-            await fetch("/api/connect_dwolla_with_plaid",{
+            await fetch("/api/dwolla-plaid-verified-funding-source",{
                 method: "POST",
                 body:JSON.stringify({accountID: metadata.account_id}),
                 headers:{
