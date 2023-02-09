@@ -3,7 +3,7 @@
 ## Reason why I chose this:
 - One of the first options that shows up from Dwolla and has a pretty simple implementaion with Plaid.
 - No transaction fee between users to users like stripe
-- 
+- https://plaid.com/partner-directory/
 
 
 ## Useful Links
