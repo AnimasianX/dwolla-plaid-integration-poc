@@ -1,5 +1,11 @@
 # dwolla-plaid-integration-poc
 
+## Reason why I chose this:
+- One of the first options that shows up from Dwolla and has a pretty simple implementaion with Plaid.
+- No transaction fee between users to users like stripe
+- 
+
+
 ## Useful Links
 - https://accounts-sandbox.dwolla.com/
 - https://developers.dwolla.com/guides/transfer-money-between-users
