@@ -3,7 +3,7 @@
 ## Reason why I chose this:
 - One of the first options that shows up from Dwolla and has a pretty simple implementaion with Plaid.
 - No transaction fee between users to users like stripe
-- https://plaid.com/partner-directory/
+- https://plaid.com/partner-directory/ - all partners that work with plaid for bank verification/credentials and integrates with ACH payment processing services like Dwolla. The implementation are relatively the same in terms of using Link object via Plaid. Another difference is payment for the services.
 
 
 ## Useful Links
